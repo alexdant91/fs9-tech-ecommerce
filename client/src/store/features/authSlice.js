@@ -10,11 +10,12 @@ const authSlice = createSlice({
         token: auth?.token || null,
     },
     reducers: {
-        login: (state, { payload }) => {  // { user, token }
-            state.user = payload.user;
-            state.token = payload.token;
+        login: (state, { payload }) => {
+            const { accessToken, refreshToken, ...userInfo } = payload;
+            state.user = userInfo;
+            state.token = accessToken;
 
-            memory.set("auth", payload);
+            memory.set("auth", { ...state });
         },
         logout: (state) => {
             state.user = null;

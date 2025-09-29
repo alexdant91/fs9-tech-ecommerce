@@ -1,9 +1,9 @@
 import { useRef } from "react"
 import { Link, useNavigate } from "react-router-dom"
-import { api } from "../lib/api";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { login } from "../store/features/authSlice";
+import { loginUser } from "../services/auth";
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -17,15 +17,17 @@ const Login = () => {
 
         const data = Object.fromEntries(new FormData(event.target));
 
+        console.log(data)
+
         try {
-            const user = await api.auth.login(data);
+            const user = await loginUser({ ...data });
 
             console.log(user);
             dispatch(login(user));
             navigate("/");
         } catch (err) {
+            console.log(err);
             toast.error("User not found");
-            formRef.current.reset();
             emailRef.current.focus();
         }
     }
@@ -41,9 +43,9 @@ const Login = () => {
                 <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
                     <form onSubmit={handleSubmit} ref={formRef} className="space-y-6">
                         <div>
-                            <label for="email" className="block text-sm/6 font-medium text-gray-900">Email address</label>
+                            <label for="username" className="block text-sm/6 font-medium text-gray-900">Username</label>
                             <div className="mt-2">
-                                <input id="email" ref={emailRef} type="email" name="email" required autocomplete="email" className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                                <input id="username" ref={emailRef} type="text" defaultValue="emilys" name="username" required autocomplete="username" className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
                             </div>
                         </div>
 
@@ -55,7 +57,7 @@ const Login = () => {
                                 </div>
                             </div>
                             <div className="mt-2">
-                                <input id="password" type="password" name="password" required autocomplete="current-password" className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
+                                <input id="password" type="password" defaultValue="emilyspass" name="password" required autocomplete="current-password" className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6" />
                             </div>
                         </div>
 
